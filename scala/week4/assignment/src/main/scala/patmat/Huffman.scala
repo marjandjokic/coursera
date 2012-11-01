@@ -78,6 +78,8 @@ object Huffman {
    *   }
    */
   def times(chars: List[Char]): List[(Char, Int)] = {
+    // Sorter but worst perfomant
+    // (chars.sortWith(_<_)).group().map((_.head, _.length))
     def iter(chars: List[Char], acc: List[(Char, Int)]): List[(Char, Int)] = {
       chars match {
         case Nil => acc
@@ -233,19 +235,13 @@ object Huffman {
       tree match {
         case _: Leaf => acc.reverse
         case Fork(l, r, _, _) =>
-          if (containsChar(l, char)) iter(char, l, 0 :: acc)
+          if (chars(l).contains(char)) iter(char, l, 0 :: acc)
           else iter(char, r, 1 :: acc)
       }
     }
     iter(char, tree, Nil)
   }
 
-  def containsChar(tree: CodeTree, char: Char): Boolean = {
-    tree match {
-      case Leaf(c, _) => c == char
-      case Fork(_, _, lc, _) => lc.contains(char) 
-    }
-  }
   // Part 4b: Encoding using code table
 
   type CodeTable = List[(Char, List[Bit])]
